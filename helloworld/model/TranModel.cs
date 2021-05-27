@@ -23,8 +23,6 @@ namespace helloworld.model
                 cmd.Parameters.Add("?status", MySqlDbType.VarChar).Value = transaction.status;
                 cmd.Parameters.Add("?transaction_type", MySqlDbType.VarChar).Value = transaction.transaction_type;
                 cmd.ExecuteNonQuery();
-                Console.WriteLine("history saved");
-                
             }
             catch (Exception e)
             {

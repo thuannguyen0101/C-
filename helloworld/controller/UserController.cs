@@ -141,50 +141,29 @@ namespace helloworld.controller
             double money = double.Parse(Console.ReadLine());
             string remitters = users.email;
             double sun = double.Parse(users.balance) - money;
-            Console.WriteLine($"are you sure you want to transfer the amount {money}$ to the account {receiver}");
-            Console.WriteLine("choose ◉ y confirm");
-            Console.WriteLine("choose ◉ n cancel");
-            string choice = Console.ReadLine();
-            switch (choice)
+            Users _users = userModel.transfers(remitters, money, receiver, sun);
+            if (_users == null)
             {
-                case "y":
-                    if (money > double.Parse(users.balance))
-                    {
-                        Console.WriteLine("Insufficient balance in the account");
-                        return users;
-                    }
-                    else
-                    {
-                        Users _users = userModel.transfers(remitters, money, receiver, sun);
-                        if (_users == null)
-                        {
-                            return users;
-                        }
-                        else
-                        {
-                            // thong bao nguoi nhan
-                            transactionReceiver.cardNumber = receiver;
-                            transactionReceiver.description =
-                                $"you get amount {money}$ from account number {remitters}";
-                            transactionReceiver.transaction_type = "receive";
-                            transactionReceiver.status = 1;
-                            tranModel.store(transactionReceiver);
-                            // thong bao nguoi gui
-                            transactionRemitters.cardNumber = users.cardNumber;
-                            transactionRemitters.description =
-                                $"you have successfully transfer the amount {money}$ to account {receiver} your balance is {_users.balance}$";
-                            transactionRemitters.transaction_type = "transfer";
-                            transactionRemitters.status = 1;
-                            tranModel.store(transactionRemitters);
-                            return _users; 
-                        }
-                    }
-                    break;
-                case "n":
-                    Console.WriteLine("Cancel");
-                    break;
+                return users;
             }
-            return users;
+            else
+            {
+                // thong bao nguoi nhan
+                transactionReceiver.cardNumber = receiver;
+                transactionReceiver.description =
+                    $"you get amount {money}$ from account number {remitters}";
+                transactionReceiver.transaction_type = "receive";
+                transactionReceiver.status = 1;
+                tranModel.store(transactionReceiver);
+                // thong bao nguoi gui
+                transactionRemitters.cardNumber = users.cardNumber;
+                transactionRemitters.description =
+                    $"you have successfully transfer the amount {money}$ to account {receiver} your balance is {_users.balance}$";
+                transactionRemitters.transaction_type = "transfer";
+                transactionRemitters.status = 1;
+                tranModel.store(transactionRemitters);
+                return _users;
+            }
         }
 
         public void TransactionHistory(Users users)
@@ -194,7 +173,7 @@ namespace helloworld.controller
             List<Transaction> list = tranModel.TransactionHistory(cardNumber);
 
             Console.WriteLine("Transaction type \t\t Status \t\t\t Create At \t\t\t\t Description");
-            foreach (Transaction transaction in list )
+            foreach (Transaction transaction in list)
             {
                 string a = null;
                 if (transaction.status == 1)
@@ -205,8 +184,9 @@ namespace helloworld.controller
                 {
                     a = "cancel";
                 }
-                Console.WriteLine($" {transaction.transaction_type}\t\t\t{a}  \t\t\t{transaction.created_At}\t\t{transaction.description}");
-                
+
+                Console.WriteLine(
+                    $" {transaction.transaction_type}\t\t\t{a}  \t\t\t{transaction.created_At}\t\t{transaction.description}");
             }
         }
     }

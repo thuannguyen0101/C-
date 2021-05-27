@@ -186,38 +186,54 @@ namespace helloworld.model
             MySqlConnection connection = connectionHelper.GetConnection();
             MySqlCommand cmd = new MySqlCommand();
             cmd.Connection = connection;
+            
             try
             {
                 cmd.CommandText = $"SELECT * from users WHERE cardNumber ='{receiver}'";
+                
                 MySqlDataReader datareceiver = cmd.ExecuteReader();
                 if (datareceiver.Read())
                 {
-                    if (datareceiver["cardNumber"].ToString() != null)
-                    {
-                        total =  double.Parse(datareceiver["balance"].ToString()) + money;
-                        datareceiver.Close();
-                        cmd.CommandText = $"UPDATE `users` SET `balance`='{total}' WHERE cardNumber ='{receiver}'";
-                        MySqlDataReader a = cmd.ExecuteReader();
-                        a.Close();
-                        cmd.CommandText = $"UPDATE `users` SET `balance`='{sun}' WHERE email ='{account}'";
-                        MySqlDataReader y = cmd.ExecuteReader();
-                        y.Close();
-                        cmd.CommandText = $"SELECT * from users WHERE email ='{account}'";
-                        MySqlDataReader dataUser = cmd.ExecuteReader();
-                        while (dataUser.Read())
-                        {
-                            var fullName = dataUser["fullName"].ToString();
-                            var email = dataUser["email"].ToString();
-                            var phone = dataUser["phone"].ToString();
-                            var cardNumber = dataUser["cardNumber"].ToString();
-                            var balance = dataUser["balance"].ToString();
-                            var salt = dataUser["Salt"].ToString();
-                            var pass = dataUser["password"].ToString();
-                            _users = new Users(fullName, email, pass, phone, cardNumber, balance, salt);
-                        }
-                        dataUser.Close();
-                    }
+                    Console.WriteLine($"are you sure you want to transfer the amount {money}$ Name {datareceiver["fullName"]} cardNumber {datareceiver["cardNumber"]}");
+                    Console.WriteLine("choose ◉ y confirm");
+                    Console.WriteLine("choose ◉ n cancel");
+                    string choice = Console.ReadLine();
+                    total =  double.Parse(datareceiver["balance"].ToString()) + money;
+                    string U = datareceiver["cardNumber"].ToString();
                     datareceiver.Close();
+                    switch (choice)
+                    {
+                        case "y":
+                           
+                                if (U != null)
+                                {
+                                    cmd.CommandText = $"UPDATE `users` SET `balance`='{total}' WHERE cardNumber ='{receiver}'";
+                                    MySqlDataReader a = cmd.ExecuteReader();
+                                    a.Close();
+                                    cmd.CommandText = $"UPDATE `users` SET `balance`='{sun}' WHERE email ='{account}'";
+                                    MySqlDataReader y = cmd.ExecuteReader();
+                                    y.Close();
+                                    cmd.CommandText = $"SELECT * from users WHERE email ='{account}'";
+                                    MySqlDataReader dataUser = cmd.ExecuteReader();
+                                    while (dataUser.Read())
+                                    {
+                                        var fullName = dataUser["fullName"].ToString();
+                                        var email = dataUser["email"].ToString();
+                                        var phone = dataUser["phone"].ToString();
+                                        var cardNumber = dataUser["cardNumber"].ToString();
+                                        var balance = dataUser["balance"].ToString();
+                                        var salt = dataUser["Salt"].ToString();
+                                        var pass = dataUser["password"].ToString();
+                                        _users = new Users(fullName, email, pass, phone, cardNumber, balance, salt);
+                                    }
+                                    dataUser.Close();
+                                }
+                                datareceiver.Close();
+                                break;
+                        case "n":
+                            Console.WriteLine("Cancel");
+                            break;
+                    }
                 }
                 else
                 {

@@ -51,8 +51,9 @@ namespace helloworld.view
                 }
                 else
                 {
-                    Console.WriteLine($"\tWelcome: {users.fullName}");
-                    Console.WriteLine($"\tBalance: {users.balance}$");
+                    Console.WriteLine($"\tWelcome:     {users.fullName}");
+                    Console.WriteLine($"\tBalance:     {users.balance}$");
+                    Console.WriteLine($"\tCard number: {users.cardNumber}");
                     Console.WriteLine("-1: Transfers");
                     Console.WriteLine("-2: Recharge");
                     Console.WriteLine("-3: Withdrawal");
