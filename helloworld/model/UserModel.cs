@@ -111,7 +111,7 @@ namespace helloworld.model
                 {
                     cmd.CommandText = $"UPDATE `users` SET `balance`='{sun}' WHERE email ='{account}'";
                     MySqlDataReader a = cmd.ExecuteReader();
-                    Console.WriteLine($"successful recharge {money}$ balance {sun}");
+                    Console.WriteLine($"\tSuccessful recharge {money}$ balance {sun}$");
                     a.Close();
                 }
 
@@ -156,7 +156,7 @@ namespace helloworld.model
                 }
                 cmd.CommandText = $"UPDATE `users` SET `balance`='{sun}' WHERE email ='{account}'";
                 MySqlDataReader a = cmd.ExecuteReader();
-                Console.WriteLine($"successful withdrawal {money}$ balance {sun}");
+                Console.WriteLine($"\tSuccessful withdrawal {money}$ balance {sun}$");
                 a.Close();
                 cmd.CommandText = $"SELECT * from users WHERE email ='{account}'";
                 MySqlDataReader dataUser = cmd.ExecuteReader();
@@ -194,6 +194,7 @@ namespace helloworld.model
                 MySqlDataReader datareceiver = cmd.ExecuteReader();
                 if (datareceiver.Read())
                 {
+                    
                     Console.WriteLine($"are you sure you want to transfer the amount {money}$ Name {datareceiver["fullName"]} cardNumber {datareceiver["cardNumber"]}");
                     Console.WriteLine("choose ◉ y confirm");
                     Console.WriteLine("choose ◉ n cancel");
@@ -225,6 +226,7 @@ namespace helloworld.model
                                         var salt = dataUser["Salt"].ToString();
                                         var pass = dataUser["password"].ToString();
                                         _users = new Users(fullName, email, pass, phone, cardNumber, balance, salt);
+                                        Console.WriteLine("\tMoney transfer successful");
                                     }
                                     dataUser.Close();
                                 }

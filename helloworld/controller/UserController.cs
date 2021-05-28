@@ -86,7 +86,7 @@ namespace helloworld.controller
             }
             else
             {
-                Console.WriteLine("error");
+                Console.WriteLine("Amount cannot be a negative number");
                 return users;
             }
         }
@@ -104,7 +104,7 @@ namespace helloworld.controller
             {
                 if (money > double.Parse(users.balance))
                 {
-                    Console.WriteLine("error");
+                    Console.WriteLine("\tInsufficient balance in the account !");
                     return users;
                 }
                 else
@@ -122,7 +122,7 @@ namespace helloworld.controller
             }
             else
             {
-                Console.WriteLine(" error ");
+                Console.WriteLine(" Amount cannot be a negative number ");
                 return users;
             }
         }
@@ -141,28 +141,41 @@ namespace helloworld.controller
             double money = double.Parse(Console.ReadLine());
             string remitters = users.email;
             double sun = double.Parse(users.balance) - money;
-            Users _users = userModel.transfers(remitters, money, receiver, sun);
-            if (_users == null)
+            if (money < double.Parse(users.balance) && money > 0)
             {
+                Users _users = userModel.transfers(remitters, money, receiver, sun);
+                if (_users == null)
+                {
+                    return users;
+                }
+                else
+                {
+                    // thong bao nguoi nhan
+                    transactionReceiver.cardNumber = receiver;
+                    transactionReceiver.description =
+                        $"you get amount {money}$ from account number {users.cardNumber}";
+                    transactionReceiver.transaction_type = "receive";
+                    transactionReceiver.status = 1;
+                    tranModel.store(transactionReceiver);
+                    // thong bao nguoi gui
+                    transactionRemitters.cardNumber = users.cardNumber;
+                    transactionRemitters.description =
+                        $"you have successfully transfer the amount {money}$ to account {receiver} your balance is {_users.balance}$";
+                    transactionRemitters.transaction_type = "transfer";
+                    transactionRemitters.status = 1;
+                    tranModel.store(transactionRemitters);
+                    return _users;
+                }
+            }
+            else if (money < 0)
+            {
+                Console.WriteLine("Amount cannot be a negative number");
                 return users;
             }
             else
             {
-                // thong bao nguoi nhan
-                transactionReceiver.cardNumber = receiver;
-                transactionReceiver.description =
-                    $"you get amount {money}$ from account number {remitters}";
-                transactionReceiver.transaction_type = "receive";
-                transactionReceiver.status = 1;
-                tranModel.store(transactionReceiver);
-                // thong bao nguoi gui
-                transactionRemitters.cardNumber = users.cardNumber;
-                transactionRemitters.description =
-                    $"you have successfully transfer the amount {money}$ to account {receiver} your balance is {_users.balance}$";
-                transactionRemitters.transaction_type = "transfer";
-                transactionRemitters.status = 1;
-                tranModel.store(transactionRemitters);
-                return _users;
+                Console.WriteLine("\tInsufficient balance in the account !");
+                return users;
             }
         }
 

@@ -14,7 +14,7 @@ namespace helloworld.view
 
             Console.OutputEncoding = Encoding.UTF8;
             Console.InputEncoding = Encoding.UTF8;
-            Console.WriteLine("\tWelcome to spring-hero-bank by Thuận Nguyễn");
+            Console.WriteLine("\t---Welcome to spring-hero-bank by Thuận Nguyễn---\n");
             while (true)
             {
                 if (users == null)
@@ -77,6 +77,8 @@ namespace helloworld.view
                                 userController.TransactionHistory(users);
                                 break;
                             case 5:
+                                Console.WriteLine("It's a pleasure to serve you");
+                                
                                 users = null;
                                 break;
                         }
